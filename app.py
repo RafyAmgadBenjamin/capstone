@@ -2,13 +2,16 @@ import os
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from models import setup_db
 
 
 def create_app(test_config=None):
-    # create and configure the app
+    # Create and configure the app
     app = Flask(__name__)
+    # Load
+    setup_db(app)
+    # Enable CORS
     CORS(app)
-
     # CORS Headers
     @app.after_request
     def after_request(response):
