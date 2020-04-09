@@ -41,6 +41,38 @@ class Movie(db.Model):
     release_date = db.Column(db.DateTime(), nullable=True)
     actors = db.relationship("Actor", secondary=ActorMovie, backref="movie", lazy=True)
 
+    def __init__(self, title, release_date):
+        """Initialize the movie class with title and release_date
+        """
+        self.title = title
+        self.release_date = release_date
+
+    def save(self):
+        """
+        Save the movie object to database
+        """
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        """
+        Delete the movie object from the database
+        """
+        db.session.delete(self)
+        db.session.commit()
+
+    def update(self):
+        """
+        Update the movie object to database
+        """
+        db.session.commit()
+
+    def format(self):
+        """
+        Format the movie
+        """
+        return {"id": self.id, "title": self.title, "release_date": self.release_date}
+
 
 class Actor(db.Model):
     __tablename__ = "Actor"
@@ -49,4 +81,43 @@ class Actor(db.Model):
     age = db.Column(db.Integer, nullable=True)
     gender = db.Column(db.CHAR(1), nullable=True)
     movies = db.relationship("Movie", secondary=ActorMovie, backref="actor", lazy=True)
+
+    def __init__(self, name, age, gender):
+        """
+        Initialize the actor object with name, age and gender
+        """
+        self.name = name
+        self.age = age
+        self.gender = gender
+
+    def save(self):
+        """
+        Save the actor object to database
+        """
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        """
+        Delete the actor object from the database
+        """
+        db.session.delete(self)
+        db.session.commit()
+
+    def update(self):
+        """
+        Update the actor object to database
+        """
+        db.session.commit()
+
+    def format(self):
+        """
+        Format the actor
+        """
+        return {
+            "id": self.id,
+            "name": self.name,
+            "age": self.age,
+            "gender": self.gender,
+        }
 
