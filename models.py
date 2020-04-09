@@ -47,6 +47,6 @@ class Actor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     age = db.Column(db.Integer, nullable=True)
-    gender = db.Column(db.Char, nullable=True)
+    gender = db.Column(db.CHAR(1), nullable=True)
     movies = db.relationship("Movie", secondary=ActorMovie, backref="actor", lazy=True)
 
