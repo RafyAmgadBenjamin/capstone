@@ -29,6 +29,7 @@ def create_app(test_config=None):
         return response
 
     # Endpoints
+
     # Movie endpoints
     @app.route("/movies", methods=["GET"])
     def get_movies():
@@ -45,25 +46,155 @@ def create_app(test_config=None):
             abort(404)
         return jsonify({"success": True, "movie": movie.format()})
 
+    @app.route("/movies/<int:movie_id>", methods=["DELETE"])
+    def delete_movie(movie_id):
+        movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
+        if not movie:
+            abort(404)
+        try:
+            movie.delete()
+            return jsonify({"success": True, "movie": movie.format()})
+        except Exception:
+            abort(422)
+
     @app.route("/movies/<int:movie_id>", methods=["PATCH"])
     def update_movie(movie_id):
         body = request.get_json()
-        try:
-            movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
-            if not movie:
-                abort(404)
 
-            if "title" in body:
-                movie.title = body.get("title")
-            # TODO validate the date to be in the right format
+        movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
+        # If there is no movie with this ID abort
+        if not movie:
+            abort(404)
+        # Validate the either title or release_date in the body
+        if not "title" in body and not "release_date" in body:
+            abort(400)
+
+        if "title" in body:
+            movie.title = body.get("title")
+        try:
             if "release_date" in body:
                 release_date = datetime.strptime(body.get("release_date"), "%Y-%m-%d")
                 movie.release_date = release_date
-
+        except Exception:
+            abort(400)
+        try:
             movie.update()
             return jsonify({"success": True, "movie": movie.format()})
         except Exception:
+            abort(422)
+
+    @app.route("/movies", methods=["POST"])
+    def add_movie():
+        body = request.get_json()
+        # Make sure the the request body have title and release_date
+        if not "title" in body or not "release_date" in body:
             abort(400)
+        # Remove spaces and give it standard format to be saved in database
+        movie_title = body.get("title").strip().title()
+        # Make sure that the added title is not there
+        movie = Movie.query.filter(Movie.title == movie_title).one_or_none()
+        # Abort as this movie already exist with the same name and it is duplication
+        if movie:
+            abort(409)
+        # Format the date to be in the required format and in type for the database
+        try:
+            movie_release_date = datetime.strptime(body.get("release_date"), "%Y-%m-%d")
+        except Exception:
+            abort(400)
+        try:
+            movie = Movie(title=movie_title, release_date=movie_release_date)
+            movie.save()
+            return jsonify({"success": True, "movie": movie.format()})
+        except Exception:
+            abort(422)
+
+    # Actor endpoints
+    @app.route("/actors", methods=["GET"])
+    def get_actors():
+        actors = Actor.query.order_by(Actor.id).all()
+        if len(actors) == 0:
+            abort(404)
+        actors_formated = [actor.format() for actor in actors]
+        return jsonify({"success": True, "actors": actors_formated})
+
+    @app.route("/actors/<int:actor_id>", methods=["GET"])
+    def get_actor(actor_id):
+        actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
+        if not actor:
+            abort(404)
+        return jsonify({"success": True, "actor": actor.format()})
+
+    @app.route("/actors/<int:actor_id>", methods=["DELETE"])
+    def delete_actor(actor_id):
+        actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
+        if not actor:
+            abort(404)
+        try:
+            actor.delete()
+            return jsonify({"success": True, "actor": actor.format()})
+        except Exception:
+            abort(422)
+
+    @app.route("/actors/<int:actor_id>", methods=["PATCH"])
+    def update_actor(actor_id):
+        body = request.get_json()
+        actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
+        # If no actor with this ID abort
+        if not actor:
+            abort(404)
+        # validate that the body at least one attribute
+        if not "name" in body and not "age" in body and not "gender" in body:
+            abort(400)
+
+        if "name" in body:
+            actor.name = body.get("name")
+
+        if "age" in body:
+            actor.age = int(body.get("age"))
+
+        if "gender" in body:
+            gender = body.get("gender").upper()
+            if gender == "M" or gender == "F":
+                actor.gender = gender
+            else:
+                abort(400)
+        try:
+            actor.update()
+            return jsonify({"success": True, "actor": actor.format()})
+        except Exception:
+            abort(422)
+
+    @app.route("/actors", methods=["POST"])
+    def add_actor():
+        body = request.get_json()
+        # Make sure the the request body have title and release_date
+        if not "name" in body or not "age" in body or not "gender" in body:
+            abort(400)
+
+        # Remove spaces and give it standard format to be saved in database
+        actor_name = body.get("name").strip().title()
+        # Make sure that the added name is not there
+        actor = Actor.query.filter(Actor.name == actor_name).one_or_none()
+        # Abort as this actor already exist with the same name and it is duplication
+        if actor:
+            abort(409)
+
+        # Validate the gender
+        if "gender" in body:
+            gender = body.get("gender").upper()
+            if gender == "M" or gender == "F":
+                actor_gender = gender
+            else:
+                abort(400)
+
+        try:
+            actor = Actor(
+                name=actor_name, age=int(body.get("age")), gender=actor_gender
+            )
+            actor.save()
+            return jsonify({"success": True, "actor": actor.format()})
+        except Exception:
+            abort(422)
 
     ## Error Handling
     @app.errorhandler(422)
