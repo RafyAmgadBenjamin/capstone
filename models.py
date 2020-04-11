@@ -18,12 +18,15 @@ setup_db(app)
 """
 
 
-def setup_db(app, database_path=database_path):
+def setup_db(app, database_path=database_path, database_name="capstoneDB"):
     app.config["SQLALCHEMY_DATABASE_URI"] = database_path
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.app = app
     db.init_app(app)
-    migrate = Migrate(app, db)  # migrations instantiation
+    if database_name == "capstoneDB":
+        migrate = Migrate(app, db)  # migrations instantiation
+    else:
+        db.create_all()
 
 
 ActorMovie = db.Table(
