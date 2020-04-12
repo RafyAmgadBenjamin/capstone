@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from models import setup_db, Movie, Actor
 from datetime import datetime
+from auth import AuthError, requires_auth
 
 
 def create_app(test_config=None):
@@ -272,6 +273,15 @@ def create_app(test_config=None):
         return (
             jsonify({"success": False, "error": 403, "message": "forbidden",}),
             403,
+        )
+
+    @app.errorhandler(AuthError)
+    def authorize_authenticate_error(error):
+        return (
+            jsonify(
+                {"success": False, "error": error.status_code, "message": error.error}
+            ),
+            error.status_code,
         )
 
     return app
