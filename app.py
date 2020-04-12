@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, abort, jsonify
+from flask import Flask, request, abort, jsonify, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from models import setup_db, Movie, Actor
@@ -195,6 +195,28 @@ def create_app(test_config=None):
             return jsonify({"success": True, "actor": actor.format()})
         except Exception:
             abort(422)
+
+    @app.route("/login")
+    def login():
+        # TODO move them to config. file
+        auth0 = {}
+        auth0["url"] = "dev-8kyz9p1y.auth0.com"
+        auth0["audience"] = "production"
+        auth0["clientId"] = "jtk9my7HviNXDMwEAy1YUy8KwVh2tGc7"
+        auth0["callbackURL"] = "http://localhost:5000/welcome"
+
+        link = "https://"
+        link += auth0["url"] + ".auth0.com"
+        link += "/authorize?"
+        link += "audience=" + auth0["audience"] + "&"
+        link += "response_type=token&"
+        link += "client_id=" + auth0["clientId"] + "&"
+        link += "redirect_uri=" + auth0["callbackURL"]
+        return redirect(link, code=302)
+
+    @app.route("/welcome")
+    def welcome():
+        return "welcome to our application"
 
     ## Error Handling
     @app.errorhandler(422)
