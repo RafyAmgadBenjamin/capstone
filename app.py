@@ -33,7 +33,8 @@ def create_app(test_config=None):
 
     # Movie endpoints
     @app.route("/movies", methods=["GET"])
-    def get_movies():
+    @requires_auth("get:movies")
+    def get_movies(payload):
         movies = Movie.query.order_by(Movie.id).all()
         if len(movies) == 0:
             abort(404)
@@ -41,14 +42,16 @@ def create_app(test_config=None):
         return jsonify({"success": True, "movies": movies_formated})
 
     @app.route("/movies/<int:movie_id>", methods=["GET"])
-    def get_movie(movie_id):
+    @requires_auth("get:single-movie")
+    def get_movie(payload, movie_id):
         movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
         if not movie:
             abort(404)
         return jsonify({"success": True, "movie": movie.format()})
 
     @app.route("/movies/<int:movie_id>", methods=["DELETE"])
-    def delete_movie(movie_id):
+    @requires_auth("delete:movies")
+    def delete_movie(payload, movie_id):
         movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
         if not movie:
             abort(404)
@@ -59,7 +62,8 @@ def create_app(test_config=None):
             abort(422)
 
     @app.route("/movies/<int:movie_id>", methods=["PATCH"])
-    def update_movie(movie_id):
+    @requires_auth("patch:movies")
+    def update_movie(payload, movie_id):
         body = request.get_json()
 
         movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
@@ -85,7 +89,8 @@ def create_app(test_config=None):
             abort(422)
 
     @app.route("/movies", methods=["POST"])
-    def add_movie():
+    @requires_auth("post:movies")
+    def add_movie(payload):
         body = request.get_json()
         # Make sure the the request body have title and release_date
         if not "title" in body or not "release_date" in body:
@@ -111,7 +116,8 @@ def create_app(test_config=None):
 
     # Actor endpoints
     @app.route("/actors", methods=["GET"])
-    def get_actors():
+    @requires_auth("get:actors")
+    def get_actors(payload):
         actors = Actor.query.order_by(Actor.id).all()
         if len(actors) == 0:
             abort(404)
@@ -119,14 +125,16 @@ def create_app(test_config=None):
         return jsonify({"success": True, "actors": actors_formated})
 
     @app.route("/actors/<int:actor_id>", methods=["GET"])
-    def get_actor(actor_id):
+    @requires_auth("get:single-actor")
+    def get_actor(payload, actor_id):
         actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
         if not actor:
             abort(404)
         return jsonify({"success": True, "actor": actor.format()})
 
     @app.route("/actors/<int:actor_id>", methods=["DELETE"])
-    def delete_actor(actor_id):
+    @requires_auth("delete:actors")
+    def delete_actor(payload, actor_id):
         actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
         if not actor:
             abort(404)
@@ -137,7 +145,8 @@ def create_app(test_config=None):
             abort(422)
 
     @app.route("/actors/<int:actor_id>", methods=["PATCH"])
-    def update_actor(actor_id):
+    @requires_auth("patch:actors")
+    def update_actor(payload, actor_id):
         body = request.get_json()
         actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
         # If no actor with this ID abort
@@ -166,7 +175,8 @@ def create_app(test_config=None):
             abort(422)
 
     @app.route("/actors", methods=["POST"])
-    def add_actor():
+    @requires_auth("post:actors")
+    def add_actor(payload):
         body = request.get_json()
         # Make sure the the request body have title and release_date
         if not "name" in body or not "age" in body or not "gender" in body:
@@ -215,9 +225,11 @@ def create_app(test_config=None):
         link += "redirect_uri=" + auth0["callbackURL"]
         return redirect(link, code=302)
 
+    @app.route("/")
     @app.route("/welcome")
     def welcome():
-        return "welcome to our application"
+        # TODO add security for this API
+        return "Welcome To Capstone Application"
 
     ## Error Handling
     @app.errorhandler(422)
