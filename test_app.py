@@ -15,17 +15,16 @@ class CapstoneTestCase(unittest.TestCase):
         self.app = create_app()
         self.client = self.app.test_client
         self.database_name = "capstoneDB_test"
-        self.database_path = "postgresql://{}:{}@{}/{}".format(
-            "rafy", "admin", "localhost:5432", self.database_name
-        )
+
+        self.database_path = os.getenv("TESTDATABASE_PATH")
         setup_db(self.app, self.database_path, self.database_name)
 
         self.movie = Movie(title="instersteller", release_date="2014-4-4")
         self.actor = Actor(name="tom cruise", age=55, gender="M")
 
-        self.casting_producer_jwt = "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1ESkVPRVpEUmpGRk1qSTVRelUyUVRVd1JFRkJRVGhDTnpjeU1FVXpORU0xUmpnelJEaEdOUSJ9.eyJpc3MiOiJodHRwczovL2Rldi04a3l6OXAxeS5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMDU5MTU2MjIwMDIyNjA4NjM2ODgiLCJhdWQiOlsicHJvZHVjdGlvbiIsImh0dHBzOi8vZGV2LThreXo5cDF5LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1ODY3MjcwMTAsImV4cCI6MTU4NjgxMzQxMCwiYXpwIjoianRrOW15N0h2aU5YRE13RUF5MVlVeThLd1ZoMnRHYzciLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwicGVybWlzc2lvbnMiOlsiZGVsZXRlOmFjdG9ycyIsImRlbGV0ZTptb3ZpZXMiLCJnZXQ6YWN0b3JzIiwiZ2V0Om1vdmllcyIsImdldDpzaW5nbGUtYWN0b3IiLCJnZXQ6c2luZ2xlLW1vdmllIiwicGF0Y2g6YWN0b3JzIiwicGF0Y2g6bW92aWVzIiwicG9zdDphY3RvcnMiLCJwb3N0Om1vdmllcyJdfQ.MQyBmcXAFEfSl2ChTpEPpyFyk_cWb_Zxoxnpd9HAY9aoYwZpTp5r9fVeuW_-D7CUEYIdx5uJ7BuZYamxrp1MuINreJqalCqjkKIMInJTBtSoGr-2w1f-GiJd1sSXqeB7ZqIHHSQkPZnxWrK3yNaocEet3CmdR90MUOE452u7HXqDeKFu5VgLkAPp7Oy6jgBm6oU3KSxgTqX4IE36OMoy2DuYgJhSSpZdRSA7cOxj1TvSAcZtR1EYWEKxhx-7G0e43udnm_74mS4-TPSNo-raoM0F4Neser7829LgQah2HPgk2FoUuQjeWD3_Hd_UNn5y85yZBw4YTTh_-Hr-N7SEVA"
-        self.casting_director_jwt = "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1ESkVPRVpEUmpGRk1qSTVRelUyUVRVd1JFRkJRVGhDTnpjeU1FVXpORU0xUmpnelJEaEdOUSJ9.eyJpc3MiOiJodHRwczovL2Rldi04a3l6OXAxeS5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMDU2MDE0NjQyOTg0MjY4ODU4NDciLCJhdWQiOlsicHJvZHVjdGlvbiIsImh0dHBzOi8vZGV2LThreXo5cDF5LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1ODY3Mjg4NjQsImV4cCI6MTU4NjgxNTI2NCwiYXpwIjoianRrOW15N0h2aU5YRE13RUF5MVlVeThLd1ZoMnRHYzciLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwicGVybWlzc2lvbnMiOlsiZGVsZXRlOmFjdG9ycyIsImdldDphY3RvcnMiLCJnZXQ6bW92aWVzIiwiZ2V0OnNpbmdsZS1hY3RvciIsImdldDpzaW5nbGUtbW92aWUiLCJwYXRjaDphY3RvcnMiLCJwYXRjaDptb3ZpZXMiLCJwb3N0OmFjdG9ycyJdfQ.L9Px4BMcrg_MCmNH_rQ9fXHx0JkTFiUFbpRXIWqT_uTwRdJxigOxuyJuk8XMWh5DTa2A6g2EPAET0gz1sZLCJRIZ41xOuseaaMoxe_tsZwSNaZ2iWC1IkH6dp_eNXgObXLGeUZ4dCvUg8C63vVxjj6NsZ-CknNCgARSxaqOUFowHI6iv0Ce1eLB5lehjf2Z90fbPn2glB9czqScDHG9SCmbSMVnPeksrJOWnPE_U9zkslbnk9yhqRHCN5kR8Qaxxz9dQWQ2xy1cEsLim7F1iAYuvQGqrHBonwwkIsw4sIpW9zAp_E_8DBsY3fZ8t_tLWXwqgQHSx_ANdnbzm8umc-g"
-        self.casting_assistant_jwt = "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1ESkVPRVpEUmpGRk1qSTVRelUyUVRVd1JFRkJRVGhDTnpjeU1FVXpORU0xUmpnelJEaEdOUSJ9.eyJpc3MiOiJodHRwczovL2Rldi04a3l6OXAxeS5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMTQzNjU1NzY3MzQxOTExODEwMTIiLCJhdWQiOlsicHJvZHVjdGlvbiIsImh0dHBzOi8vZGV2LThreXo5cDF5LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1ODY3MjY3MDcsImV4cCI6MTU4NjgxMzEwNywiYXpwIjoianRrOW15N0h2aU5YRE13RUF5MVlVeThLd1ZoMnRHYzciLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwicGVybWlzc2lvbnMiOlsiZ2V0OmFjdG9ycyIsImdldDptb3ZpZXMiLCJnZXQ6c2luZ2xlLWFjdG9yIiwiZ2V0OnNpbmdsZS1tb3ZpZSJdfQ.GsEJOtVAkYLwVU22owmlHILgfwYVW9CFUm6-Vk-YBQMWDgOSVDZhtBCnLoriyYqYvSt_iRidCi1Uespj826sVLSJG70Wzx5L0hWeZANDHGIdPAkLFPnwku-ZCTwaaPppW3Pkt3cKdR2kk8HHjxjKZH3sB_tJRLbKO5b8rwA1UlcCaFtWPqqVbADCY4T65UB8XYd5fHP8ZhiHAyWhR-JMkk4_akWgadlL2YgksXLD1Ga5i6NtW705YqI81IknGBqXkNciE0ycgpVMymc0WM5mAYQD6WUefLQSW-VRqlznutU9TuYxNMhBuaRYmXp8P8M6K8Q6SGSo5FryXKMkDSB2iA"
+        self.casting_producer_jwt = os.getenv("CASTING_PRODUCER_JWT")
+        self.casting_director_jwt = os.getenv("CASTING_DIRECTOR_JWT")
+        self.casting_assistant_jwt = os.getenv("CASTING_ASSISTANT_JWT")
 
         # binds the app to the current context
         with self.app.app_context():

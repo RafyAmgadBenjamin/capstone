@@ -211,9 +211,9 @@ def create_app(test_config=None):
     def login():
         # TODO move them to config. file
         auth0 = {}
-        auth0["url"] = "dev-8kyz9p1y.auth0.com"
-        auth0["audience"] = "production"
-        auth0["clientId"] = "jtk9my7HviNXDMwEAy1YUy8KwVh2tGc7"
+        auth0["url"] = os.getenv("AUTH0_URL")
+        auth0["audience"] = os.getenv("AUTH0_AUDIENCE")
+        auth0["clientId"] = os.getenv("AUTH0_CLIENT_ID")
         auth0["callbackURL"] = "http://localhost:5000/welcome"
 
         link = "https://"
