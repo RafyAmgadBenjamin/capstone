@@ -2,9 +2,9 @@ import os
 from flask import Flask, request, abort, jsonify, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from models import setup_db, Movie, Actor
+from .models import setup_db, Movie, Actor
 from datetime import datetime
-from auth import AuthError, requires_auth
+from .auth import AuthError, requires_auth
 
 
 def create_app(test_config=None):
