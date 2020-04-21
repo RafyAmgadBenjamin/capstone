@@ -35,6 +35,9 @@ def create_app(test_config=None):
     @app.route("/movies", methods=["GET"])
     @requires_auth("get:movies")
     def get_movies(payload):
+        """
+        It returns list of movies
+        """
         movies = Movie.query.order_by(Movie.id).all()
         if len(movies) == 0:
             abort(404)
@@ -44,6 +47,9 @@ def create_app(test_config=None):
     @app.route("/movies/<int:movie_id>", methods=["GET"])
     @requires_auth("get:single-movie")
     def get_movie(payload, movie_id):
+        """
+        It returns a single movie.
+        """
         movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
         if not movie:
             abort(404)
@@ -52,6 +58,9 @@ def create_app(test_config=None):
     @app.route("/movies/<int:movie_id>", methods=["DELETE"])
     @requires_auth("delete:movies")
     def delete_movie(payload, movie_id):
+        """
+        It deletes a movie of specific Id
+        """
         movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
         if not movie:
             abort(404)
@@ -64,6 +73,9 @@ def create_app(test_config=None):
     @app.route("/movies/<int:movie_id>", methods=["PATCH"])
     @requires_auth("patch:movies")
     def update_movie(payload, movie_id):
+        """
+        Updates a movie data
+        """
         body = request.get_json()
 
         movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
@@ -91,6 +103,9 @@ def create_app(test_config=None):
     @app.route("/movies", methods=["POST"])
     @requires_auth("post:movies")
     def add_movie(payload):
+        """
+        Adds a new movie
+        """
         body = request.get_json()
         # Make sure the the request body have title and release_date
         if not "title" in body or not "release_date" in body:
@@ -118,6 +133,9 @@ def create_app(test_config=None):
     @app.route("/actors", methods=["GET"])
     @requires_auth("get:actors")
     def get_actors(payload):
+        """
+        It returns a list of actors
+        """
         actors = Actor.query.order_by(Actor.id).all()
         if len(actors) == 0:
             abort(404)
@@ -127,6 +145,9 @@ def create_app(test_config=None):
     @app.route("/actors/<int:actor_id>", methods=["GET"])
     @requires_auth("get:single-actor")
     def get_actor(payload, actor_id):
+        """
+        It returns a single actor
+        """
         actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
         if not actor:
             abort(404)
@@ -135,6 +156,9 @@ def create_app(test_config=None):
     @app.route("/actors/<int:actor_id>", methods=["DELETE"])
     @requires_auth("delete:actors")
     def delete_actor(payload, actor_id):
+        """
+        Deletes single actor.
+        """
         actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
         if not actor:
             abort(404)
@@ -147,6 +171,9 @@ def create_app(test_config=None):
     @app.route("/actors/<int:actor_id>", methods=["PATCH"])
     @requires_auth("patch:actors")
     def update_actor(payload, actor_id):
+        """
+        Update actor data
+        """
         body = request.get_json()
         actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
         # If no actor with this ID abort
@@ -177,6 +204,9 @@ def create_app(test_config=None):
     @app.route("/actors", methods=["POST"])
     @requires_auth("post:actors")
     def add_actor(payload):
+        """
+        Adds a new actor
+        """
         body = request.get_json()
         # Make sure the the request body have title and release_date
         if not "name" in body or not "age" in body or not "gender" in body:
@@ -209,7 +239,10 @@ def create_app(test_config=None):
 
     @app.route("/login")
     def login():
-        # TODO move them to config. file
+        """
+        This is the login fucntion which redirects to Auth0
+        after making the redirection link ready.
+        """
         auth0 = {}
         auth0["url"] = os.getenv("AUTH0_URL")
         auth0["audience"] = os.getenv("AUTH0_AUDIENCE")
@@ -228,7 +261,9 @@ def create_app(test_config=None):
     @app.route("/")
     @app.route("/welcome")
     def welcome():
-        # TODO add security for this API
+        """
+        Just a simple public API as a welcoming page
+        """
         return "Welcome To Capstone Application"
 
     ## Error Handling
@@ -303,4 +338,3 @@ APP = create_app()
 
 if __name__ == "__main__":
     APP.run(host="0.0.0.0", port=8080, debug=True)
-
