@@ -153,6 +153,17 @@ I have exported collection of endpoints using Postmant to test the endpoint eith
         - post:actors
 
 
+- To be able to authorize your application using Auth0:
+    - Create an account on [auth0](https://auth0.com/)
+    - Select Domain name for you be sure that it is unique
+    - Create single page application 
+    - Create an API and enable RBAC and add permissions in Access Token 
+    - Add permissions mention above to the API you have created
+    - Add roles as mention above 
+    - Register using three accounts at least and add different role to each account
+    - Sign in with one of the accounts you have created and get the JWT
+    - Test your endpoints by this JWT in the header either by [Postman](https://www.postman.com/) application or [Curl](https://www.computerhope.com/unix/curl.htm) command
+
 ### Error Handling
 Errors are returned as JSON objects in the following format:
 
