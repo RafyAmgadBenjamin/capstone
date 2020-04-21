@@ -2,8 +2,40 @@
 ## Introduction
 The Casting Agency models a company that is responsible for creating movies and managing and assigning actors to those movies. You are an Executive Producer within the company and are creating a system to simplify and streamline your process.
 
+### Demo
+https://capstone-fullstack-nanodegree.herokuapp.com/
+
 ## Getting Started
 ### Structure
+```
+.
+├── app
+│   ├── auth.py
+│   ├── __init__.py
+│   ├── models.py
+│   └── __pycache__
+├── capstone.postman_collection.json
+├── manage.py
+├── migrations
+│   ├── alembic.ini
+│   ├── env.py
+│   ├── __pycache__
+│   ├── README
+│   ├── script.py.mako
+│   └── versions
+├── Procfile
+├── __pycache__
+│   ├── app.cpython-36.pyc
+│   ├── auth.cpython-36.pyc
+│   ├── config.cpython-36.pyc
+│   └── models.cpython-36.pyc
+├── README.md
+├── requirements.txt
+├── setup.sh
+└── test_app.py
+
+6 directories, 18 files
+```
 
 ### Prerequisites and Installation
 
@@ -33,14 +65,15 @@ pip3 install -r requirements.txt
 - the environmental variables that need to be exported to facilitate the development and testing process including
     - FLask_app : Name of flask application.
     - APP_SETTINGS : Application mode which in our case is `development`.
-    - DATABASE_PATH : The database path used during development.
-    -  TESTDATABASE_PATH : The test database path used in testing the application.
+    - DATABASE_URL : The database path used during development.
+    - TEST_DATABASE_URL : The test database path used in testing the application.
     - AUTH0_URL : Authorization URL used in [auth0](https://auth0.com/)
     - AUTH0_AUDIENCE : API used in [auth0](https://auth0.com/)
     - AUTH0_CLIENT_ID : Client ID used in [auth0](https://auth0.com/)
-    -  CASTING_PRODUCER_JWT : Producer JWT used in development and testing.
+    - CASTING_PRODUCER_JWT : Producer JWT used in development and testing.
     - CASTING_DIRECTOR_JWT : Director JWT used in development and testing.
     - CASTING_ASSISTANT_JWT : Assistant JWT used in development and testing.
+    - AUTH0_CALLBACK : The [auth0](https://auth0.com/) call back after successfully generating the JWT, you have to make it as your **localhost** in case of development or your **domain** in case of production
 
 **you have to update this file or the environmental variable with your information** `example domain,JWT`
 ``` bash
@@ -67,8 +100,9 @@ postgres=# \q
 - apply the migrations, navigate to `app` folder
 
 ```
-flask db init
-flask db upgrade
+python3 manage.py db init
+python3 manage.py db migrate
+python3 manage.py db upgrade
 ```
 
 ### Testing 
@@ -83,12 +117,17 @@ source setup.sh
 python3 test_app.py 
 ```
 
+- You can test the application also using [Postman](https://www.postman.com/).
+I have exported collection of endpoints using Postmant to test the endpoint either locally or on the live server.
+    - you have to import the collection `capstone.postman_collection.json`
+    - Update the endpoint to local or remote host
+    - Update the JWT to be able to access the endpoints
 ## API Reference
 
 ### Getting started
 - Base URL: 
     - **Development** : The backend app is hosted at the default, http://127.0.0.1:5000/
-    - **Production** : The application has domain and hosted using [heroku](https://www.heroku.com/)
+    - **Production** : The application has [domain](https://capstone-fullstack-nanodegree.herokuapp.com/) and hosted using [heroku](https://www.heroku.com/)
 - Authentication: This version of application required authentication and authorization and this is done through [auth0](https://auth0.com/)
     - The roles:
         - Casting Assistant
@@ -384,6 +423,14 @@ The api will return eight error types when requests fail:
 ```
 
 
+
+### Deployment
+This application is deployed using [heroku](https://www.heroku.com/)
+
+Heroku is a container-based cloud Platform as a Service (PaaS). Developers use Heroku to deploy, manage, and scale modern apps. The platform is elegant, flexible, and easy to use, offering developers the simplest path to getting their apps to market.
+
+**My application Domain is**
+https://capstone-fullstack-nanodegree.herokuapp.com/
 
 ## Authors
 Rafy amgad benjamin is the author of APIs and all the files in the structure of this application.
