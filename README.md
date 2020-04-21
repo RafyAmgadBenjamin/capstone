@@ -429,6 +429,17 @@ This application is deployed using [heroku](https://www.heroku.com/)
 
 Heroku is a container-based cloud Platform as a Service (PaaS). Developers use Heroku to deploy, manage, and scale modern apps. The platform is elegant, flexible, and easy to use, offering developers the simplest path to getting their apps to market.
 
+- I have added all the required environmental variables in setting of my application in `Reveal Config Vars` section as in `setup.sh` file
+- Update my `requirements.txt` as this is the requirements Heroku will use.
+- Using a `Procfile`, using gunicorn to run the application
+- Heroku can run all your migrations to the database you have hosted on the platform, but in order to do so, your application needs to include a `manage.py` file
+- Create Heroku app `heroku create name_of_your_app`
+- Add git remote for Heroku to local repository `git remote add heroku heroku_git_url`
+- Add postgresql add on for our database `heroku addons:create heroku-postgresql:hobby-dev --app name_of_your_application`
+- Push the application `git push heroku master`
+- Run migrations `heroku run python manage.py db upgrade --app name_of_your_application`
+
+
 **My application Domain is**
 https://capstone-fullstack-nanodegree.herokuapp.com/
 
