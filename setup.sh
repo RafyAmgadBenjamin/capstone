@@ -1,8 +1,8 @@
 export FLask_app="__init__.py"
 export APP_SETTINGS="development"
 
-export DATABASE_PATH="postgresql://rafy:admin@localhost:5432/capstoneDB"
-export TESTDATABASE_PATH="postgresql://rafy:admin@localhost:5432/capstoneDB_test"
+export DATABASE_URL="postgresql://rafy:admin@localhost:5432/capstoneDB"
+export TEST_DATABASE_URL="postgresql://rafy:admin@localhost:5432/capstoneDB_test"
 
 
 export AUTH0_URL="dev-8kyz9p1y.auth0.com"

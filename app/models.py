@@ -5,7 +5,7 @@ from flask_migrate import Migrate
 import json
 
 
-database_path = os.getenv("DATABASE_PATH")
+database_path = os.getenv("DATABASE_URL")
 db = SQLAlchemy()
 
 """

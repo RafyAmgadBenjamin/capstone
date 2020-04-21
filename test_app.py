@@ -16,7 +16,7 @@ class CapstoneTestCase(unittest.TestCase):
         self.client = self.app.test_client
         self.database_name = "capstoneDB_test"
 
-        self.database_path = os.getenv("TESTDATABASE_PATH")
+        self.database_path = os.getenv("TEST_DATABASE_URL")
         setup_db(self.app, self.database_path, self.database_name)
 
         self.movie = Movie(title="instersteller", release_date="2014-4-4")
