@@ -2,7 +2,6 @@
 your database schema and changes that you make to it. Heroku can run all 
 your migrations to the database you have hosted on the platform, but in order 
 to do so,your application needs to include a manage.py file"""
-import os
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 
