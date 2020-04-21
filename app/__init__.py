@@ -214,7 +214,7 @@ def create_app(test_config=None):
         auth0["url"] = os.getenv("AUTH0_URL")
         auth0["audience"] = os.getenv("AUTH0_AUDIENCE")
         auth0["clientId"] = os.getenv("AUTH0_CLIENT_ID")
-        auth0["callbackURL"] = "http://localhost:5000/welcome"
+        auth0["callbackURL"] = os.getenv("AUTH0_CALLBACK")
 
         link = "https://"
         link += auth0["url"] + ".auth0.com"
